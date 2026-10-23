@@ -1,0 +1,29 @@
+{
+  "name": "Job Application Tracker",
+  "short_name": "Job Tracker",
+  "description": "Log job applications, update interview status, and keep your search organized in one place.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#020617",
+  "theme_color": "#4f46e5",
+  "lang": "en",
+  "categories": ["productivity", "business"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Open Tracker",
+      "short_name": "Tracker",
+      "description": "Open your job application dashboard",
+      "url": "/"
+    }
+  ]
+}

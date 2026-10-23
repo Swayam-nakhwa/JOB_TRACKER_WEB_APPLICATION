@@ -1,0 +1,63 @@
+[
+  {
+    "id": "job_1792764902938_hak3l",
+    "CompanyName": "messho",
+    "JobRole": "Frontend Developer",
+    "JobUrl": "",
+    "Status": "Interview",
+    "date": "Oct 23, 2026",
+    "userId": "user_1792764367865",
+    "createdAt": "2026-10-23T14:15:02.938Z"
+  },
+  {
+    "id": "job_1792765864620_2hqiv",
+    "CompanyName": "Amazon",
+    "JobRole": "SDE",
+    "JobUrl": "",
+    "Status": "Offered",
+    "date": "Oct 23, 2026",
+    "userId": "user_1792764367865",
+    "createdAt": "2026-10-23T14:31:04.620Z"
+  },
+  {
+    "id": "job_1792765903702_thcgb",
+    "CompanyName": "NVIDIA",
+    "JobRole": "FULL STACK DEVELOPER",
+    "JobUrl": "",
+    "Status": "Applied",
+    "date": "Oct 23, 2026",
+    "userId": "user_1792764367865",
+    "createdAt": "2026-10-23T14:31:43.702Z"
+  },
+  {
+    "id": "job_1792765953229_cp45p",
+    "CompanyName": "Myntra",
+    "JobRole": "HR",
+    "JobUrl": "",
+    "Status": "Offered",
+    "date": "Oct 23, 2026",
+    "userId": "user_1792765930604",
+    "createdAt": "2026-10-23T14:32:33.229Z"
+  },
+  {
+    "id": "job_1792766113472_9li06",
+    "CompanyName": "Microsoft",
+    "JobRole": "Designer",
+    "JobUrl": "",
+    "Status": "Applied",
+    "date": "Oct 23, 2026",
+    "userId": "user_1792766081071",
+    "createdAt": "2026-10-23T14:35:13.472Z"
+  },
+  {
+    "id": "job_1792766165398_zl6li",
+    "CompanyName": "APPLE",
+    "JobRole": "CEO",
+    "JobUrl": "",
+    "Status": "Interview",
+    "date": "Oct 23, 2026",
+    "userId": "user_1792765986912",
+    "createdAt": "2026-10-23T14:36:05.398Z",
+    "updatedAt": "2026-10-23T14:36:18.720Z"
+  }
+]

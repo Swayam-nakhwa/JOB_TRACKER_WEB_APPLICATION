@@ -1,0 +1,42 @@
+[
+  {
+    "id": "user_alex_1",
+    "name": "Alex Johnson",
+    "email": "alex.developer@gmail.com",
+    "password": "$2b$10$/pOhIumlzMkzphu95k2ZVObkRcM82C8HF.3Uvw0fJzYEbGWQl3aUe",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex",
+    "createdAt": "2026-10-23T13:57:55.449Z"
+  },
+  {
+    "id": "user_1792764367865",
+    "name": "Unknown Boi",
+    "email": "unknownboi600@gmail.com",
+    "password": "$2b$10$XK5KHxRtHmRW7x50Fqn.Hu0nthBBeH1Af8MxeuN0EGWBCDcjOH/IW",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Unknown%20Boi",
+    "createdAt": "2026-10-23T14:06:07.865Z"
+  },
+  {
+    "id": "user_1792765930604",
+    "name": "Swayam Nakhwa",
+    "email": "swayamnakhwa@gmail.com",
+    "password": "$2b$10$F.R8sqHFmHe6LaUydE9j9u4stlQs37VFqMr9QhAEDb5fMoNEUewka",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Swayam%20Nakhwa",
+    "createdAt": "2026-10-23T14:32:10.604Z"
+  },
+  {
+    "id": "user_1792765986912",
+    "name": "wizard",
+    "email": "wizardone@gmail.com",
+    "password": "$2b$10$W4ghNxR3n0c5Q9M2WnokCOlrcXOFvBPvXohRF0v1GUEZshe5dwqPW",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=wizard",
+    "createdAt": "2026-10-23T14:33:06.912Z"
+  },
+  {
+    "id": "user_1792766081071",
+    "name": "Golem",
+    "email": "golem@gmail.com",
+    "password": "$2b$10$NHkcDb9GPZs2rKjWkJz2JeCSDtAvyGysqRUPv35GPNqaGPLiNJ4Wi",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Golem",
+    "createdAt": "2026-10-23T14:34:41.071Z"
+  }
+]
