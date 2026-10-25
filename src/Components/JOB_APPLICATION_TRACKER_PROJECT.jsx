@@ -59,6 +59,7 @@ function JobTracker({ userId }) {
   const [sortBy, setSortBy]             = useState('newest')
   const [jobToDelete, setJobToDelete]   = useState(null)
   const [isLoading, setIsLoading]       = useState(false)
+  const [operationError, setOperationError] = useState('')
 
   // ── Sync with Backend on Mount ──────────────────────────────────────────
   useEffect(() => {
@@ -68,22 +69,32 @@ function JobTracker({ userId }) {
     apiRequest('/api/jobs')
       .then(async (res) => {
         if (cancelled) return
-        if (res.success && Array.isArray(res.jobs)) {
-          if (res.jobs.length > 0) {
-            setJobs(res.jobs)
-          } else {
-            // If server has 0 jobs but local storage has jobs, sync them up to DB
-            const local = loadCachedJobs(userId)
-            if (local.length > 0) {
-              await apiRequest('/api/jobs/sync', {
-                method: 'POST',
-                body: JSON.stringify({ localJobs: local }),
-              })
-              const refreshed = await apiRequest('/api/jobs')
-              if (!cancelled && refreshed.success && Array.isArray(refreshed.jobs)) {
-                setJobs(refreshed.jobs)
-              }
+        if (!res.success || !Array.isArray(res.jobs)) {
+          setOperationError(res.error || 'Could not load applications from the server.')
+          return
+        }
+
+        if (res.jobs.length > 0) {
+          setJobs(res.jobs)
+        } else {
+          const local = loadCachedJobs(userId)
+          if (local.length > 0) {
+            const syncResult = await apiRequest('/api/jobs/sync', {
+              method: 'POST',
+              body: JSON.stringify({ localJobs: local }),
+            })
+            if (!syncResult.success) {
+              setOperationError(syncResult.error || 'Could not sync saved applications to the server.')
+              return
             }
+            const refreshed = await apiRequest('/api/jobs')
+            if (!cancelled && refreshed.success && Array.isArray(refreshed.jobs)) {
+              setJobs(refreshed.jobs)
+            } else if (!cancelled) {
+              setOperationError(refreshed.error || 'Could not load applications from the server.')
+            }
+          } else {
+            setJobs([])
           }
         }
       })
@@ -150,6 +161,7 @@ function JobTracker({ userId }) {
 
     setFormErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) return
+    setOperationError('')
 
     const payload = {
       CompanyName: form.CompanyName.trim(),
@@ -159,45 +171,42 @@ function JobTracker({ userId }) {
     }
 
     if (editingId) {
-      // Optimistic update
-      setJobs((prev) => prev.map((job) => (job.id === editingId ? { ...job, ...payload } : job)))
-      resetForm()
-
       const res = await apiRequest(`/api/jobs/${editingId}`, {
         method: 'PUT',
         body: JSON.stringify(payload),
       })
       if (res.success && res.job) {
         setJobs((prev) => prev.map((job) => (job.id === editingId ? res.job : job)))
+        resetForm()
+      } else {
+        setOperationError(res.error || 'Could not update this application. Please try again.')
       }
     } else {
-      const tempId = `temp_${Date.now()}`
-      const tempJob = {
-        ...payload,
-        id: tempId,
-        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-      }
-      // Optimistic addition
-      setJobs((prev) => [tempJob, ...prev])
-      resetForm()
-
       const res = await apiRequest('/api/jobs', {
         method: 'POST',
         body: JSON.stringify(payload),
       })
       if (res.success && res.job) {
-        setJobs((prev) => prev.map((job) => (job.id === tempId ? res.job : job)))
+        setJobs((prev) => [res.job, ...prev])
+        resetForm()
+      } else {
+        setOperationError(res.error || 'Could not save this application. Please try again.')
       }
     }
   }, [form, editingId, resetForm])
 
   /** Updates the status of a single job card in place. */
   const handleStatusChange = useCallback(async (id, status) => {
-    setJobs((prev) => prev.map((job) => (job.id === id ? { ...job, Status: status } : job)))
-    await apiRequest(`/api/jobs/${id}`, {
+    setOperationError('')
+    const res = await apiRequest(`/api/jobs/${id}`, {
       method: 'PUT',
       body: JSON.stringify({ Status: status }),
     })
+    if (res.success && res.job) {
+      setJobs((prev) => prev.map((job) => (job.id === id ? res.job : job)))
+    } else {
+      setOperationError(res.error || 'Could not update this application. Please try again.')
+    }
   }, [])
 
   /** Populates the form with an existing job's data to start editing. */
@@ -218,14 +227,17 @@ function JobTracker({ userId }) {
     if (!jobToDelete) return
     const idToDelete = jobToDelete.id
 
-    // Optimistic deletion
-    setJobs((prev) => prev.filter((job) => job.id !== idToDelete))
-    if (editingId === idToDelete) resetForm()
-    setJobToDelete(null)
-
-    await apiRequest(`/api/jobs/${idToDelete}`, {
+    setOperationError('')
+    const res = await apiRequest(`/api/jobs/${idToDelete}`, {
       method: 'DELETE',
     })
+    if (res.success) {
+      setJobs((prev) => prev.filter((job) => job.id !== idToDelete))
+      if (editingId === idToDelete) resetForm()
+      setJobToDelete(null)
+    } else {
+      setOperationError(res.error || 'Could not delete this application. Please try again.')
+    }
   }, [jobToDelete, editingId, resetForm])
 
   // ── Render ─────────────────────────────────────────────────────────────
@@ -233,6 +245,15 @@ function JobTracker({ userId }) {
     <div>
       {/* Stats overview */}
       <Dashboard jobs={jobs} />
+
+      {operationError && (
+        <p
+          className="mb-4 rounded-xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200"
+          role="alert"
+        >
+          {operationError}
+        </p>
+      )}
 
       <JobForm
         companyName={form.CompanyName}
