@@ -38,5 +38,13 @@
     "password": "$2b$10$NHkcDb9GPZs2rKjWkJz2JeCSDtAvyGysqRUPv35GPNqaGPLiNJ4Wi",
     "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Golem",
     "createdAt": "2026-10-23T14:34:41.071Z"
+  },
+  {
+    "id": "user_1792927854414",
+    "name": "AiShorts",
+    "email": "aishorts67420@gmail.com",
+    "password": "$2b$10$BIyTaYKkb.jHXngiUUif3OckHj18EBUySsk3zpANwo3Su6p3gPcVq",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=AiShorts",
+    "createdAt": "2026-10-25T11:30:54.414Z"
   }
 ]

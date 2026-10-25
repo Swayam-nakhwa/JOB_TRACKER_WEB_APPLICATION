@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import fs from 'node:fs'
 import path from 'node:path'
+import process from 'node:process'
 import bcrypt from 'bcryptjs'
 
 // In-memory / JSON fallback store if MongoDB URI is not connected yet
@@ -37,26 +38,51 @@ function ensureDataFiles() {
 }
 
 let isMongoConnected = false
+let connectionPromise
 
 export async function connectDB() {
   const uri = process.env.MONGODB_URI
+  if ((!uri || uri.trim() === '') && process.env.NODE_ENV === 'production') {
+    throw new Error('MONGODB_URI must be configured in production.')
+  }
+
   if (uri && uri.trim() !== '') {
-    try {
-      await mongoose.connect(uri)
+    if (mongoose.connection.readyState === 1) {
       isMongoConnected = true
-      console.log('✅ Connected successfully to MongoDB!')
       return true
-    } catch (err) {
-      console.warn('⚠️  Could not connect to MongoDB URI:', err.message)
-      console.log('ℹ️  Switching to resilient local JSON database fallback with full bcrypt hashing.')
+    }
+
+    if (!connectionPromise) {
+      connectionPromise = (async () => {
+        try {
+          await mongoose.connect(uri)
+          isMongoConnected = true
+          console.log('✅ Connected successfully to MongoDB!')
+          return true
+        } catch (err) {
+          isMongoConnected = false
+          if (process.env.NODE_ENV === 'production') {
+            throw err
+          }
+          console.warn('⚠️  Could not connect to MongoDB URI:', err.message)
+          console.log('ℹ️  Switching to resilient local JSON database fallback with full bcrypt hashing.')
+          ensureDataFiles()
+          return false
+        }
+      })()
+    }
+
+    try {
+      return await connectionPromise
+    } finally {
+      connectionPromise = undefined
     }
   } else {
     console.log('ℹ️  No MONGODB_URI provided in .env.')
     console.log('ℹ️  Running in resilient local DB fallback mode with bcrypt password hashing & JWT tokens.')
+    ensureDataFiles()
+    return false
   }
-
-  ensureDataFiles()
-  return false
 }
 
 export function getIsMongoConnected() {

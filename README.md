@@ -31,7 +31,7 @@ npm run dev
 3. **Multi-User Data Isolation**: Every job application in MongoDB is indexed and tied to the authenticated user's ID (`userId`). Users can only access, modify, or delete their own applications.
 4. **Resilient MongoDB + Fallback**:
    - If `MONGODB_URI` is supplied in `.env`, the server automatically connects to MongoDB Atlas or local MongoDB.
-   - If no MongoDB URI is supplied, the server seamlessly runs in local fallback mode with full bcrypt hashing and JWT auth active.
+   - If no MongoDB URI is supplied during local development, the server uses a local JSON fallback. Production requires MongoDB to avoid losing data when the hosting instance restarts.
 
 ---
 
@@ -49,7 +49,7 @@ PORT=5000
 MONGODB_URI=
 
 # JWT Secret for Signing User Authentication Tokens
-JWT_SECRET=job-tracker-production-secret-key-2026
+JWT_SECRET=replace-with-a-long-random-secret
 
 # Optional: Real Gmail SMTP for Password Reset OTP Emails
 GMAIL_USER=
@@ -57,6 +57,39 @@ GMAIL_APP_PASSWORD=
 ```
 
 ---
+
+## 🚂 Deploying to Railway
+
+The repository includes a `railway.json` configuration. Railway will run `npm run build`, start the Express server with `npm start`, and check `/api/health`. The server also serves the built React app.
+
+1. Push this repository to GitHub, then in Railway choose **New Project → Deploy from GitHub repo** and select the repository.
+2. Add a MongoDB database to the Railway project (or use MongoDB Atlas). In the application service's **Variables**, set `MONGODB_URI` to the database connection URL.
+3. Set `JWT_SECRET` to a unique, long random value. Do not use the example value from `.env.example` or commit production secrets.
+4. Set `NODE_ENV` to `production`. Optionally set `GMAIL_USER` and `GMAIL_APP_PASSWORD` to enable password-reset emails.
+5. Wait for the deployment to pass its `/api/health` check. In the service's **Settings → Networking**, generate a public domain and open it to verify the app.
+
+`PORT` is assigned by Railway automatically; do not set it manually. The service will not start in production if `MONGODB_URI` or `JWT_SECRET` is missing or MongoDB is unreachable. Once the domain is generated, test account registration/login and refresh the page to confirm the SPA route works.
+
+For a local production-mode smoke test, configure `.env` with MongoDB and a JWT secret, then run:
+
+```bash
+npm run build
+npm start
+```
+
+Open `http://localhost:5000` and `http://localhost:5000/api/health`.
+
+## ▲ Deploying to Vercel
+
+The repository includes a `vercel.json` configuration. Vercel builds the Vite app, bundles the Express server as a serverless function, and serves the built frontend through Express.
+
+1. Sign up or log in to [Vercel](https://vercel.com/signup), then choose **Add New → Project** and import this GitHub repository.
+2. Keep the project root directory as the repository root. Vercel uses the included build configuration; Node.js 22.12 or later is required.
+3. Create a MongoDB database using MongoDB Atlas or another hosted MongoDB provider. In the Vercel project **Settings → Environment Variables**, add `MONGODB_URI` and `JWT_SECRET`.
+4. Add `NODE_ENV` with value `production`. Optionally add `GMAIL_USER` and `GMAIL_APP_PASSWORD` to enable password-reset emails.
+5. Deploy, then open the assigned domain and check `/api/health`. Register a test account and refresh a nested app route to verify the frontend and API.
+
+Do not set `PORT` on Vercel or use the local JSON database for production: serverless instances are temporary. Production API requests require a reachable MongoDB database and a unique `JWT_SECRET`; without either, the API will return an error rather than silently use temporary storage.
 
 ## 📦 API Endpoints
 

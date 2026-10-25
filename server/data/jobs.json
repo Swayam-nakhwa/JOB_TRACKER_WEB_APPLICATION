@@ -59,5 +59,15 @@
     "userId": "user_1792765986912",
     "createdAt": "2026-10-23T14:36:05.398Z",
     "updatedAt": "2026-10-23T14:36:18.720Z"
+  },
+  {
+    "id": "job_1792927879698_tb1gn",
+    "CompanyName": "ubers",
+    "JobRole": "DEVELOPER",
+    "JobUrl": "",
+    "Status": "Offered",
+    "date": "Oct 25, 2026",
+    "userId": "user_1792927854414",
+    "createdAt": "2026-10-25T11:31:19.698Z"
   }
 ]
