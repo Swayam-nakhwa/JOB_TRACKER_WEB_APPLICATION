@@ -81,7 +81,7 @@ Open `http://localhost:5000` and `http://localhost:5000/api/health`.
 
 ## ▲ Deploying to Vercel
 
-The repository includes a `vercel.json` configuration. Vercel builds the Vite app, bundles the Express server as a serverless function, and serves the built frontend through Express.
+The repository includes a `vercel.json` configuration. Vercel builds and serves the Vite frontend as static files and runs the Express API as a serverless function.
 
 1. Sign up or log in to [Vercel](https://vercel.com/signup), then choose **Add New → Project** and import this GitHub repository.
 2. Keep the project root directory as the repository root. Vercel uses the included build configuration; Node.js 22.12 or later is required.

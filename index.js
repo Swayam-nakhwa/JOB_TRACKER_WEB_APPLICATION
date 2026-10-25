@@ -39,7 +39,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes)
 app.use('/api/jobs', jobsRoutes)
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
   const distPath = path.join(__dirname, 'dist')
   app.use(express.static(distPath))
   app.get('/{*splat}', (req, res) => {
